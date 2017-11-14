@@ -24,7 +24,7 @@ V011['Temperature'] = V011['Temperature'].str.strip('.')
 
 # Deleting the columns 'Unit', 'Integer', and 'Fractional'
 V011 = V011.drop(['Unit', 'Integer', 'Fractional'], axis=1)
-print(pandas.DataFrame.head(V011))
+#print(pandas.DataFrame.head(V011))
 
 # Convert the data types to Date and Float
 V011['Temperature'] = V011.Temperature.astype(float)
@@ -35,6 +35,19 @@ DailyAv = V011.resample('D', how = 'mean')
 print(pandas.DataFrame.head(DailyAv))
 
 # Adding a column 'Day/Night'
+import ephem
+import math
+import datetime
 
-
-
+sun = ephem.Sun()
+observer = ephem.Observer()
+# ↓ Define your coordinates here ↓
+observer.lat, observer.lon, observer.elevation = '55.695', '13.447', 0
+# ↓ Set the time (UTC) here ↓
+observer.date = datetime.datetime.utcnow()
+sun.compute(observer)
+current_sun_alt = sun.alt
+if current_sun_alt*180/math.pi < -6:
+	print('day')
+else:
+	print('night')
