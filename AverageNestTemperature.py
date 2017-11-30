@@ -13,21 +13,21 @@ import datetime
 os.chdir('/Users/jvddorpe/Desktop/PiedFlycatchers/NestTemperatureFiles')
 
 # Import the first csv file as a start
-V011 = pandas.read_csv('V011.csv', sep = ',', skiprows = 20, header = None, names = ['Timestamp', 'Unit', 'Integer', 'Fractional'], index_col=0, parse_dates=True, dayfirst = True)
-print(pandas.DataFrame.head(V011))
-print(V011.dtypes)
+V11 = pandas.read_csv('V11.csv', sep = ',', skiprows = 20, header = None, names = ['Timestamp', 'Unit', 'Integer', 'Fractional'], index_col=0, parse_dates=True, dayfirst = True)
+print(pandas.DataFrame.head(V11))
+print(V11.dtypes)
 
 # Merge the 'Integer' and 'Fractional' columns to a 'Temperature' column
-V011['Temperature'] = V011[['Integer', 'Fractional']].apply(lambda x: '.'.join(x.fillna('').map(str)), axis=1)
-V011['Temperature'] = V011['Temperature'].str.strip('.')
+V11['Temperature'] = V11[['Integer', 'Fractional']].apply(lambda x: '.'.join(x.fillna('').map(str)), axis=1)
+V11['Temperature'] = V11['Temperature'].str.strip('.')
 
 # Delete the columns 'Unit', 'Integer', and 'Fractional'
-V011 = V011.drop(['Unit', 'Integer', 'Fractional'], axis=1)
-print(pandas.DataFrame.head(V011))
+V11 = V11.drop(['Unit', 'Integer', 'Fractional'], axis=1)
+print(pandas.DataFrame.head(V11))
 
 # Convert the data types to Date and Float
-V011['Temperature'] = V011.Temperature.astype(float)
-print(V011.dtypes)
+V11['Temperature'] = V11.Temperature.astype(float)
+print(V11.dtypes)
 
 # Add a column 'DayOrNight'
 sun = ephem.Sun()
@@ -37,7 +37,7 @@ observer.lat, observer.lon, observer.elevation = '55.695', '13.447', 0
 
 # Try on a single row
 # Set the time (UTC)
-observer.date = ephem.Date(V011.index[0])
+observer.date = ephem.Date(V11.index[0])
 sun.compute(observer)
 if sun.alt*180/math.pi < -6:
 	print('night')
@@ -45,20 +45,25 @@ else:
 	print('day')
 	
 # Iterate over the dataframe
-V011['DayOrNight'] = ''
-for index, row in V011.iterrows():
+V11['DayOrNight'] = ''
+for index, row in V11.iterrows():
 	# Set the time (UTC)
 	observer.date = ephem.Date(index)
 	sun.compute(observer)
 	if sun.alt*180/math.pi < -6:
-		V011['DayOrNight'][index] = 'night'
+		V11['DayOrNight'][index] = 'night'
 	else:
-		V011['DayOrNight'][index] = 'day'
-print(pandas.DataFrame.head(V011))
+		V11['DayOrNight'][index] = 'day'
+print(pandas.DataFrame.head(V11))
 
-# Calculate the daily average temperature separately for civil day and civil night
-TwilightAv = V011.groupby(['DayOrNight']).resample('D').mean()
+# Calculate the daily average temperature separately for civil days and civil nights
+TwilightAv = V11.groupby(['DayOrNight']).resample('D').mean()
 print(TwilightAv)
 # Reset index 'day' or 'night' as a column
 TwilightAv.reset_index(level=0, inplace=True) 
 print(TwilightAv)
+
+# Reading multiple csv into multiple dataframes
+nests = {i: pandas.read_csv('/Users/jvddorpe/Desktop/PiedFlycatchers/NestTemperatureFiles/V{}.csv'.format(i), sep = ',', skiprows = 20, header = None, names = ['Timestamp', 'Unit', 'Integer', 'Fractional'], index_col=0, parse_dates=True, dayfirst = True) for i in [11, 17, 28, 35, 37, 43, 85, 86, 87, 103, 110, 124, 136, 138, 141, 156, 162, 165, 191, 192, 216, 227, 306, 326, 330, 336, 340, 354, 371, 376, 385]}
+print(nests[11])
+
