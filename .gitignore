@@ -10,7 +10,7 @@ TemperatureFiles/Tests/
 *.DS_Store
 *.numbers
 *.pdf
-*.data
+*.xlsx
 Notes/
 Papers/
 Pictures/
