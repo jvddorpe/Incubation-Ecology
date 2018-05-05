@@ -1,0 +1,16 @@
+AmbientTemperatureFiles/*.csv
+AmbientTemperatureFiles/*.xlsx
+AmbientTemperatureFiles/*.DS_Store
+TemperatureFiles/*.DS_Store
+TemperatureFiles/*.csv
+TemperatureFiles/*.txt.sel
+TemperatureFiles/*.R
+TemperatureFiles/Done/
+TemperatureFiles/Tests/
+*.DS_Store
+*.numbers
+*.pdf
+*.data
+Notes/
+Papers/
+Pictures/
