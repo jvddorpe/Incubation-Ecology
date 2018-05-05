@@ -14,3 +14,13 @@ TemperatureFiles/Tests/
 Notes/
 Papers/
 Pictures/
+NestTemperatureFiles/*.RData
+NestTemperatureFiles/*.history
+NestTemperatureFiles/*.Rhistory
+NestTemperatureFiles/*.txt
+NestTemperatureFiles/*.lock
+NestTemperatureFiles/*.csv
+NestTemperatureFiles/*.R
+NestTemperatureFiles/Originals/
+NestTemperatureFiles/Pipfile/
+NestTemperatureFiles/av.nest.temp/
